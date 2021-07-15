@@ -17,7 +17,7 @@ export default function Home() {
     'rafaballerini',
     'marcobrunodev',
     'felipefialho'
-  ]
+  ];
   
   return (
     <>
@@ -51,7 +51,6 @@ export default function Home() {
                       <span>{people}</span>
                   </a>
                 </li>
-                
               )
             })}
           </ul>
