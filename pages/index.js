@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '../src/components/Box';
 import MainGrid from '../src/components/MainGrid';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelationsBoxWrapper';
@@ -20,12 +20,52 @@ function ProfileSideBar(propriedades) {
    
   )
 }
+
+function ProfileRelationsBox(propriedades) {
+  return(
+    <ProfileRelationsBoxWrapper> 
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {propriedades.items.map((seguidor) => {
+          return(
+            <li key={seguidor.id}>
+              <a href={`https://github.com/${seguidor}.png`}>
+                <img src={seguidor.avatar_url} />
+                  <span>{seguidor.login}</span>
+              </a>
+            </li>
+            )
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
+  const [seguidores, setSeguidores] = useState([]);
   const [comunidades, setComunidades] = useState([{
     title: 'Github',
     urlCommunity: 'https://github.com/',
     image: 'https://logosmarcas.net/wp-content/uploads/2020/12/GitHub-Logo.png'
   }]);
+  useEffect(() => {
+    fetch('https://api.github.com/users/monique24/followers')
+    .then(function(response) {
+      if(response.ok) {
+        return response.json() 
+      }
+      throw new Error('Error ' + response.status)
+    }, [])
+    .then(function(response) {
+      setSeguidores(response);
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+  }, []);
+ 
   const githubUser = 'monique2002';
   const peoplesFavorites = [
     'Eric-Veludo',
@@ -132,6 +172,7 @@ export default function Home() {
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox title={"Seguidores"} items={seguidores} />
         </div>
       </MainGrid>
     </>

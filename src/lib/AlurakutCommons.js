@@ -262,11 +262,11 @@ export function OrkutNostalgicIconSet(props) {
         </li>
       ))}
       {[
-        { name: 'Confiável', slug: 'confiavel', icon: 'smile' },
-        { name: 'Legal', slug: 'legal', icon: 'cool' },
-        { name: 'Sexy', slug: 'sexy', icon: 'heart' },
-      ].map(({ name, slug, icon }) => {
-        const total = props[slug] ? props[slug] : 2;
+        { name: 'Confiável', slug: 'confiavel', icon: 'smile', count: 3},
+        { name: 'Legal', slug: 'legal', icon: 'cool', count: 3},
+        { name: 'Sexy', slug: 'sexy', icon: 'heart', count: 1},
+      ].map(({ name, slug, icon, count}) => {
+        const total = props[slug] ? props[slug] : count;
         return (
           <li key={`orkut__icon_set__${slug}`}>
             <span className="OrkutNostalgicIconSet__title">

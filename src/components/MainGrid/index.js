@@ -5,7 +5,7 @@ width: 100%;
 grid-gap: 10px;
 padding: 16px;
 margin-left: auto;
-margin-rigth: auto;
+margin-right: auto;
 .profileArea {
   display: none;
   @media(min-width: 860px) {
