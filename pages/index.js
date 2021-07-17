@@ -28,7 +28,7 @@ function ProfileRelationsBox(propriedades) {
         {propriedades.title} ({propriedades.items.length})
       </h2>
       <ul>
-        {propriedades.items.map((seguidor) => {
+        {propriedades.items.slice(0,6).map((seguidor) => {
           return(
             <li key={seguidor.id}>
               <a href={`https://github.com/${seguidor}.png`}>
@@ -45,13 +45,19 @@ function ProfileRelationsBox(propriedades) {
 
 export default function Home() {
   const [seguidores, setSeguidores] = useState([]);
-  const [comunidades, setComunidades] = useState([{
-    title: 'Github',
-    urlCommunity: 'https://github.com/',
-    image: 'https://logosmarcas.net/wp-content/uploads/2020/12/GitHub-Logo.png'
-  }]);
+  const [comunidades, setComunidades] = useState([]);
+  const githubUser = 'monique2002';
+  const peoplesFavorites = [
+    'Eric-Veludo',
+    'ThamiresMadureira',
+    'peas',
+    'rafaballerini',
+    'marcobrunodev',
+    'felipefialho'
+  ];
+
   useEffect(() => {
-    fetch('https://api.github.com/users/monique24/followers')
+    fetch('https://api.github.com/users/monique2002/followers')
     .then(function(response) {
       if(response.ok) {
         return response.json() 
@@ -64,17 +70,30 @@ export default function Home() {
     .catch(function(error) {
       console.log(error);
     })
+
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': '9798dd6f579ce79b0dc7ee99677e1a',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json', 
+      },
+      body: JSON.stringify({"query": `query {
+        allCommunities {
+          id
+          title
+          imageUrl
+          communityUrl
+        }
+      }
+      `})
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      const comunidadesDato = response.data.allCommunities;
+      setComunidades(comunidadesDato);
+    })
   }, []);
- 
-  const githubUser = 'monique2002';
-  const peoplesFavorites = [
-    'Eric-Veludo',
-    'ThamiresMadureira',
-    'peas',
-    'rafaballerini',
-    'marcobrunodev',
-    'felipefialho'
-  ];
   
   return (
     <>
@@ -101,16 +120,27 @@ export default function Home() {
               const dadosForm = new FormData(event.target);
 
               const comunidade = {
-                id: new Date().toISOString(),
                 title: dadosForm.get('title'),
-                urlCommunity: dadosForm.get('urlCommunity'),
-                image: dadosForm.get('urlImage') ?
+                community_url: dadosForm.get('urlCommunity'),
+                image_url: dadosForm.get('urlImage') ?
                         dadosForm.get('urlImage') 
-                        : `https://picsum.photos/200/300?${Math.random()}`
+                        : `https://picsum.photos/200/300?${Math.random()}`,
+                creator_slug: "monique2002"
               };
 
-              const comunidadeAtualizada = [...comunidades, comunidade];
-              setComunidades(comunidadeAtualizada);
+              fetch('/api/community', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(comunidade)
+              })
+              .then(async(response) => {
+                const dados = await response.json();
+                const comunidade = dados.registroCriado;
+                const comunidadeAtualizada = [...comunidades, comunidade];
+                setComunidades(comunidadeAtualizada);
+              })
             }}>
               <div>
                 <input 
@@ -143,7 +173,7 @@ export default function Home() {
               Meus amigos ({peoplesFavorites.length})
             </h2>
             <ul>
-              {peoplesFavorites.map((people) => {
+              {peoplesFavorites.slice(0,6).map((people) => {
                 return(
                   <li key={people}>
                     <a href={`/users/${people}`}>
@@ -160,11 +190,11 @@ export default function Home() {
               Minhas Comunidades ({comunidades.length})
             </h2>
             <ul>
-              {comunidades.map((comunidade) => {
+              {comunidades.slice(0,6).map((comunidade) => {
                 return(
                   <li key={comunidade.id}>
                     <a href={`${comunidade.urlCommunity}`}>
-                      <img src={comunidade.image} />
+                      <img src={comunidade.imageUrl} />
                       <span>{comunidade.title}</span>
                     </a>
                   </li>
