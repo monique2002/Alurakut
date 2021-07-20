@@ -1,23 +1,24 @@
-import { useEffect, useState } from 'react';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 import Box from '../src/components/Box';
 import MainGrid from '../src/components/MainGrid';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelationsBoxWrapper';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
+import { useEffect, useState } from 'react';
 
 function ProfileSideBar(propriedades) {
   return(
     <Box as="aside">
-    <img src={`https://github.com/${propriedades.githubUser}.png`} 
-      style={{borderRadius: '8px'}} />
-    <hr />
-    <a className="boxLink" 
-      href={`https://github.com/${propriedades.githubUser}`}>
-      @{propriedades.githubUser}
-    </a>
-    <hr />
-    <AlurakutProfileSidebarMenuDefault />
+      <img src={`https://github.com/${propriedades.githubUser}.png`} 
+        style={{borderRadius: '8px'}} />
+      <hr />
+      <a className="boxLink" 
+        href={`https://github.com/${propriedades.githubUser}`}>
+        @{propriedades.githubUser}
+      </a>
+      <hr />
+      <AlurakutProfileSidebarMenuDefault />
     </Box>
-   
   )
 }
 
@@ -43,10 +44,10 @@ function ProfileRelationsBox(propriedades) {
   )
 }
 
-export default function Home() {
+export default function Home(props) {
   const [seguidores, setSeguidores] = useState([]);
   const [comunidades, setComunidades] = useState([]);
-  const githubUser = 'monique2002';
+  const user = props.githubUser;
   const peoplesFavorites = [
     'Eric-Veludo',
     'ThamiresMadureira',
@@ -97,11 +98,11 @@ export default function Home() {
   
   return (
     <>
-      <AlurakutMenu githubUser={githubUser} />
+      <AlurakutMenu githubUser={user} />
       <MainGrid>
         <div className="profileArea" style={{gridArea: 'profileArea'}}>
           <Box>
-            <ProfileSideBar githubUser={githubUser}></ProfileSideBar>
+            <ProfileSideBar githubUser={user}></ProfileSideBar>
           </Box>
         </div>
         <div className="welcomeArea" style={{gridArea: 'welcomeArea'}}>
@@ -208,3 +209,33 @@ export default function Home() {
     </>
   )
 }
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+
+  const {isAuthenticated} = await fetch('https://alurakut.vercel.app/api/auth', {
+    headers: {
+      Authorization: token
+    }
+  })
+  .then((response) => response.json())
+  
+  if(!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  const { githubUser } = jwt.decode(token);
+  
+  return {
+    props: {
+      githubUser
+    }, // will be passed to the page component as props
+  }
+}
+
