@@ -26,7 +26,7 @@ function ProfileRelationsBox(propriedades) {
   return(
     <ProfileRelationsBoxWrapper> 
       <h2 className="smallTitle">
-        {propriedades.title} ({propriedades.items.length})
+        {propriedades.title} <span style={{color: '#C71585'}}>({propriedades.items.length})</span>
       </h2>
       <ul>
         {propriedades.items.slice(0,6).map((seguidor) => {
@@ -48,17 +48,18 @@ export default function Home(props) {
   const [seguidores, setSeguidores] = useState([]);
   const [comunidades, setComunidades] = useState([]);
   const user = props.githubUser;
-  const peoplesFavorites = [
-    'Eric-Veludo',
-    'ThamiresMadureira',
-    'peas',
-    'rafaballerini',
-    'marcobrunodev',
-    'felipefialho'
-  ];
+  const [peoplesFavorites, setPeoplesFavorites] = useState([]);
 
   useEffect(() => {
-    fetch('https://api.github.com/users/monique2002/followers')
+    fetch(`https://api.github.com/users/${user}/following`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((response) => {
+      setPeoplesFavorites(response);
+    });
+
+    fetch(`https://api.github.com/users/${user}/followers`)
     .then(function(response) {
       if(response.ok) {
         return response.json() 
@@ -108,7 +109,7 @@ export default function Home(props) {
         <div className="welcomeArea" style={{gridArea: 'welcomeArea'}}>
           <Box> 
             <h1 className="title">
-              Bem vindo(a)
+              Bem vindo(a), {user}
             </h1>
             <OrkutNostalgicIconSet></OrkutNostalgicIconSet>
           </Box>
@@ -171,24 +172,25 @@ export default function Home(props) {
         <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
           <ProfileRelationsBoxWrapper> 
             <h2 className="smallTitle">
-              Meus amigos ({peoplesFavorites.length})
+              Meus amigos <span style={{color: '#C71585'}}>({peoplesFavorites.length})</span>
             </h2>
             <ul>
               {peoplesFavorites.slice(0,6).map((people) => {
                 return(
-                  <li key={people}>
-                    <a href={`/users/${people}`}>
-                      <img src={`https://github.com/${people}.png`} />
-                        <span>{people}</span>
+                  <li key={people.id}>
+                    <a href={`/users/${people.login}`}>
+                      <img src={`https://github.com/${people.login}.png`} />
+                        <span>{people.login}</span>
                     </a>
                   </li>
                 )
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox title={"Seguidores"} items={seguidores} />
           <ProfileRelationsBoxWrapper> 
             <h2 className="smallTitle">
-              Minhas Comunidades ({comunidades.length})
+              Minhas Comunidades <span style={{color: '#C71585'}}>({comunidades.length})</span>
             </h2>
             <ul>
               {comunidades.slice(0,6).map((comunidade) => {
@@ -203,7 +205,6 @@ export default function Home(props) {
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
-          <ProfileRelationsBox title={"Seguidores"} items={seguidores} />
         </div>
       </MainGrid>
     </>

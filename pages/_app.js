@@ -4,7 +4,7 @@ import {AlurakutStyles} from  '../src/lib/AlurakutCommons';
 const GlobalStyle = createGlobalStyle` 
   html,
   body {
-    background-color: #D9E6F6;
+    background-color: #DCDCDC;
     font-family: sans-serif;
     padding: 0;
     margin: 0;

@@ -35,12 +35,12 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/login`}>
-            Sair
-          </a>
           <div>
             <input placeholder="Pesquisar no Orkut" />
           </div>
+          <a href={`/login`} className="logout">
+            Sair
+          </a>
         </nav>
 
         <button onClick={() => setMenuState(!isMenuOpen)}>
@@ -54,7 +54,7 @@ export function AlurakutMenu({ githubUser }) {
 }
 AlurakutMenu.Wrapper = styled.header`
   width: 100%;
-  background-color: #308BC5;
+  background-color: #000;
   .alurakutMenuProfileSidebar {
     background: white;
     position: fixed;
@@ -92,8 +92,11 @@ AlurakutMenu.Wrapper = styled.header`
       border-bottom-color: #ECF2FA;
     }
   }
+  .logout {
+    margin-left: 15px;
+  }
   .container {
-    background-color: #308BC5;
+    background-color: #000;
     padding: 7px 16px;
     max-width: 1110px;
     margin: auto;
@@ -126,7 +129,7 @@ AlurakutMenu.Wrapper = styled.header`
         text-decoration: none;
         &:after {
           content: " ";
-          background-color: #5292C1;
+          background-color: #fff;
           display: block;
           position: absolute;
           width: 1px;
@@ -140,7 +143,7 @@ AlurakutMenu.Wrapper = styled.header`
     }
     input {
       color: #ffffff;
-      background: #5579A1;
+      background: #363636;
       padding: 10px 42px;
       border: 0;
       background-image: url(${`${BASE_URL}/icons/search.svg`});
@@ -160,6 +163,7 @@ AlurakutMenu.Logo = styled.img`
   padding: 9px 14px;
   border-radius: 1000px;
   height: 34px;
+  margin-right: 20px;
 `;
 
 function AlurakutMenuProfileSidebar({ githubUser }) {
@@ -211,7 +215,7 @@ export function AlurakutProfileSidebarMenuDefault() {
           <img src={`${BASE_URL}/icons/plus.svg`} />
             GitHub Trends
           </a>
-        <a href="/logout">
+        <a href="/login">
           <img src={`${BASE_URL}//icons/logout.svg`} />
             Sair
           </a>
@@ -323,7 +327,7 @@ OrkutNostalgicIconSet.List = styled.ul`
 const AlurakutLoginScreen = css`
   :root {
     --backgroundPrimary: #D9E6F6;
-    --backgroundSecondary: #F1F9FE;
+    --backgroundSecondary: 	#f0f2f5;
     --backgroundTertiary: #FFFFFF;
     --backgroundQuarternary: #BBCDE8;
     --colorPrimary: #2E7BB4;
@@ -361,7 +365,7 @@ const AlurakutLoginScreen = css`
       padding: var(--gutter);
       text-align: center;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
@@ -415,7 +419,7 @@ const AlurakutLoginScreen = css`
         }
         a {
           text-decoration: none;
-          color: var(--colorPrimary);
+          color: var(--colorQuarternary);
         }
         input {
           width: 100%;
@@ -436,6 +440,23 @@ const AlurakutLoginScreen = css`
           background-color: var(--colorPrimary);
           color: var(--textSecondaryColor);
         }
+      }
+    }
+    .imageLogin {
+      img {
+        max-height: 220px;
+        margin-top: 50px;
+      } 
+    }
+    .descriptionHome {
+      display: flex;
+      flex-direction: column;
+    }
+    .logoHome {
+      img {
+        max-width: 80%;
+        margin-bottom: 20px;
+        margin-left: 20px;
       }
     }
     .footerArea {

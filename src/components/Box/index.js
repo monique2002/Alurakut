@@ -7,13 +7,13 @@ export const Box = styled.div`
   
   margin-bottom: 10px;
   .boxLink {
-    font-size: 14px;
-    color: #2E7BB4;
+    font-size: 15px;
+    color: #C71585;
     text-decoration: none;
-    font-weight: 800;
+    font-weight: 600;
   }
   .title {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 400;
     margin-bottom: 20px;
   }
@@ -53,7 +53,7 @@ export const Box = styled.div`
     padding: 8px 12px;
     color: #FFFFFF;
     border-radius: 10000px;
-    background-color: #6F92BB;
+    background-color: #363636;
   }
 `; 
 
