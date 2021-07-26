@@ -12,19 +12,17 @@ Utilizando a biblioteca ReactJs, o projeto consiste em uma rede social inspirada
 
 ## :computer: Como executar?
 
-First, run the development server:
-
 ```bash
 # clonando repositório
-$ git clone https://github.com/monique2002/Alurakut.git
+ git clone https://github.com/monique2002/Alurakut.git
 
 # entrar na pasta
-$ cd alurakut
+ cd alurakut
 
 # rodar projeto
-npm run dev
+ npm run dev
 # ou
-yarn dev
+ yarn dev
 ```
 
 
