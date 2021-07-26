@@ -47,8 +47,9 @@ function ProfileRelationsBox(propriedades) {
 export default function Home(props) {
   const [seguidores, setSeguidores] = useState([]);
   const [comunidades, setComunidades] = useState([]);
-  const user = props.githubUser;
+  const [recados, setRecados] = useState([]);
   const [peoplesFavorites, setPeoplesFavorites] = useState([]);
+  const user = props.githubUser;
 
   useEffect(() => {
     fetch(`https://api.github.com/users/${user}/following`)
@@ -95,6 +96,26 @@ export default function Home(props) {
       const comunidadesDato = response.data.allCommunities;
       setComunidades(comunidadesDato);
     })
+
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': '9798dd6f579ce79b0dc7ee99677e1a',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json', 
+      },
+      body: JSON.stringify({"query": `query{
+        allComments {
+          autor,
+          descricao
+        }
+      }`})
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      const commentsDato = response.data.allComments;
+      setRecados(commentsDato);
+    });
   }, []);
   
   return (
@@ -117,7 +138,7 @@ export default function Home(props) {
             <h2 className="subTitle"> 
               O que você deseja fazer? 
             </h2>
-            <form onSubmit={function handleCriaComunidade(event) {
+            <form onSubmit={function handleCreateComunidade(event) {
               event.preventDefault();
               const dadosForm = new FormData(event.target);
 
@@ -168,6 +189,59 @@ export default function Home(props) {
               </button>
           </form>
           </Box>
+          <Box> 
+            <h2 className="subTitle"> 
+              Deixe o seu recado
+            </h2>
+            <div>
+              <form onSubmit={function handleCreateComments(event) {
+                event.preventDefault();
+                const dados = new FormData(event.target);
+                    
+                fetch('api/comment', {
+                  method: 'POST',
+                  headers: {'Content-Type' : 'application/json'},
+                  body: JSON.stringify({
+                    autor: user,
+                    descricao: dados.get('descricao')
+                  })
+                })
+                .then(async(response) => {
+                  const dados = await response.json();
+                  const  recado = dados.registroCriado;
+                  const recadosObj = [...recados, recado];
+                    setRecados(recadosObj);
+                });
+              }}>
+              <input 
+                placeholder="O que deseja escrever?" 
+                name="descricao" 
+                aria-label="O que deseja escrever?" />
+                <button>
+                  Enviar
+                </button>
+              </form>
+            </div>  
+          </Box>
+            <Box>
+              <h2 className="subTitle"> 
+                Alguns recados..
+              </h2>
+              <ul>
+                {recados.slice(0,3).map((recado) => {
+                  return(
+                    <>
+                      <div className="authorCard">
+                        <img style={{width: '60px', borderRadius: '50px'}} src={`https://github.com/${recado.autor}.png`} />
+                        <h2 className="authorName">User: {recado.autor}</h2>
+                      </div>
+                      <h6 className="comment">{recado.descricao}</h6> 
+                    </>
+                  )
+                })}
+              </ul>
+            
+          </Box>
         </div>
         <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
           <ProfileRelationsBoxWrapper> 
@@ -179,7 +253,7 @@ export default function Home(props) {
                 return(
                   <li key={people.id}>
                     <a href={`/users/${people.login}`}>
-                      <img src={`https://github.com/${people.login}.png`} />
+                        <img src={`https://github.com/${people.login}.png`} />
                         <span>{people.login}</span>
                     </a>
                   </li>

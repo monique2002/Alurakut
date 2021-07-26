@@ -29,6 +29,20 @@ export const Box = styled.div`
     color: #333333;
     margin-bottom: 20px;
   }
+  .authorName {
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .comment {
+    font-size: 17px;
+    font-weight: inherit;
+    margin-bottom: 20px;
+    margin-left: 2%;
+  }
+  .authorCard {
+    margin-left: 2%;
+    margin-bottom: 2px;
+  }
   hr {
     margin-top: 12px;
     margin-bottom: 8px;
