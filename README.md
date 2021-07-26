@@ -8,7 +8,7 @@ Utilizando a biblioteca ReactJs, o projeto consiste em uma rede social inspirada
 - Javascript
 - GraphQL
 - Dato CMS
-- Deploy feito utilizando Vercel
+- Deploy utilizando Vercel
 
 ## :camera: Telas
 Login
